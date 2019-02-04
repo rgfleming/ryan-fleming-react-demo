@@ -3,17 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import '@progress/kendo-theme-bootstrap/dist/all.css';
 import { Grid, GridColumn } from '@progress/kendo-react-grid';
-
-class ImageCell extends Component {
-    render() {
-        const imgSrc = this.props.dataItem[this.props.field];
-        return (
-            <td>
-                <img src={imgSrc}></img>
-            </td>
-        )
-    }
-}
+import { ImageCell } from './ImageCell';
 
 class App extends Component {
     constructor(props) {
@@ -63,7 +53,7 @@ class App extends Component {
                         <GridColumn field="url" title="URL"/>
                         <GridColumn field="thumbnailUrl" 
                             title="Thumbnail URL"
-                            cell={(item) => <ImageCell {...item}/>}
+                            cell={(item) => <ImageCell {...item} width="21px;" height="21px;"/>}
                             />
                     </Grid>
                 </div>
