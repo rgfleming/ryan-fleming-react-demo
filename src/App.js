@@ -49,17 +49,17 @@ class App extends Component {
                         <img src={logo} className="App-logo" alt="logo" width="100px;" height="100px;"/>
                         <h1 className="App-title">{this.state.title}</h1>
                     </header>
-                    <div className="container">
+                    <div className="container-fluid" style={{backgroundColor:'red'}}>
                         <div className="row">
                             <div className="col"></div>
-                            <div className="col-8">
+                            <div className="col">
                                 <Grid data={items} style={{ height: '400px' }}>
-                                    <GridColumn field="albumId" title="Album No." width="50px"/>
+                                    <GridColumn field="albumId" title="Album" width="75px"/>
                                     <GridColumn field="title" title="Title" width="400px"/>
-                                    <GridColumn field="url" title="URL" width="300px"/>
+                                    <GridColumn field="url" title="URL" width="325px"/>
                                     <GridColumn 
-                                        field="thumbnailUrl" 
-                                        title="Thumbnail URL"
+                                        field="thumbnailUrl"
+                                        title=" "
                                         width="50px"
                                         cell={(item) => <ImageCell {...item} width="21px;" height="21px;"/>}
                                         />
