@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+/* Note: This component was created by Ryan */
 export class ImageCell extends Component {
     render() {
         const _src    = this.props.dataItem[this.props.field];
