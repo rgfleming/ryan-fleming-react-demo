@@ -53,7 +53,7 @@ class App extends Component {
                         <div className="row">
                             <div className="col"></div>
                             <div className="col">
-                                <Grid data={items} style={{ height: '400px' }}>
+                                <Grid data={items} style={{height: '400px'}}>
                                     <GridColumn field="albumId" title="Album" width="75px"/>
                                     <GridColumn field="title" title="Title" width="400px"/>
                                     <GridColumn field="url" title="URL" width="325px"/>
