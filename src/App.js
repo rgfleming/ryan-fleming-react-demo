@@ -6,6 +6,7 @@ import { Grid, GridColumn } from '@progress/kendo-react-grid';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
 import { ImageCell } from './ryan-kendo-components/ImageCell';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { LinkCell } from './ryan-kendo-components/LinkCell';
 
 class App extends Component {
     constructor(props) {
@@ -114,7 +115,13 @@ class App extends Component {
                                     className="table-condensed">
                                     <GridColumn field="albumId" title="Album" width="75px" filterable={false}/>
                                     <GridColumn field="title" title="Title" filterable={true} width="400px"/>
-                                    <GridColumn field="url" title="URL" filterable={true} width="325px"/>
+                                    <GridColumn 
+                                        field="url" 
+                                        title="URL" 
+                                        filterable={true} 
+                                        width="325px"
+                                        cell={(item) => <LinkCell {...item}/>}
+                                        />
                                     <GridColumn 
                                         field="thumbnailUrl"
                                         title=" "
