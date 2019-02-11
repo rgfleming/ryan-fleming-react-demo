@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
+import '@progress/kendo-theme-default/dist/all.css';
 import { Grid, GridColumn } from '@progress/kendo-react-grid';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
 import { ImageCell } from './ryan-kendo-components/ImageCell';
-import dropdownFilterCell from './telerik-kendo-components/dropdownFilterCell';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const albums = Array.apply(null, { length: 101 }).map(Number.call, Number);
-
 class App extends Component {
-    AlbumFilterCell;
-    
     constructor(props) {
         super(props);
         this.state = {
@@ -20,15 +15,23 @@ class App extends Component {
             error: null,
             isLoaded: false,
             data: [],
+            skip: 0,
+            take: 25,
             sort: [],
             allowUnsort: true,
-            multiple: true,
+            multiple: false,
             filter: undefined
         };
+        this.pageChange = this.pageChange.bind(this);
         this.sortChange = this.sortChange.bind(this);
         this.filterChange = this.filterChange.bind(this);
-        albums.shift();
-        this.AlbumFilterCell = dropdownFilterCell(albums, 'All');
+    }
+
+    pageChange(event) {
+        this.setState({
+            skip: event.page.skip,
+            take: event.page.take
+        });
     }
 
     sortChange(event) {
@@ -60,7 +63,7 @@ class App extends Component {
         .then((result) => {
             this.setState({
                 isLoaded: true,
-                data: result
+                data: result.slice()
             });
         },
         (error) => {
@@ -77,7 +80,13 @@ class App extends Component {
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
-            return <div>Loading...</div>;
+            return (
+                <div className="App">
+                    <header className="App-header">
+                        <h2 className="App-title">L<img src={logo} className="App-logo" alt="logo" width="31px;" height="31px;"/>ading...</h2>
+                    </header>
+                </div>
+            );
         } else {
             return (
                 <div className="App">
@@ -89,17 +98,23 @@ class App extends Component {
                         <div className="row">
                             <div className="col"></div>
                             <div className="col">
-                                <Grid data={data}
+                                <Grid data={data.slice(this.state.skip, this.state.take + this.state.skip)}
+                                    skip={this.state.skip}
+                                    take={this.state.take}
+                                    total={data.length}
+                                    pageable={true}
+                                    onPageChange={this.pageChange}
                                     filterable={true}
                                     filter={this.state.filter}
                                     onFilterChange={this.filterChange}
-                                    sortable={{allowUnsort:true, mode: 'multiple'}}
+                                    sortable={{allowUnsort:true, mode: 'single'}}
                                     sort={this.state.sort}
                                     onSortChange={this.sortChange}
-                                    style={{height:'400px'}}>
-                                    <GridColumn field="albumId" title="Album" filterCell={this.AlbumFilterCell} width="75px"/>
-                                    <GridColumn field="title" title="Title" filterable={false} width="400px"/>
-                                    <GridColumn field="url" title="URL" filterable={false} width="325px"/>
+                                    style={{height:'500px'}}
+                                    className="table-condensed">
+                                    <GridColumn field="albumId" title="Album" width="75px" filterable={false}/>
+                                    <GridColumn field="title" title="Title" filterable={true} width="400px"/>
+                                    <GridColumn field="url" title="URL" filterable={true} width="325px"/>
                                     <GridColumn 
                                         field="thumbnailUrl"
                                         title=" "
