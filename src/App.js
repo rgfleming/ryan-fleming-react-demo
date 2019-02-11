@@ -3,12 +3,12 @@ import logo from './logo.svg';
 import './App.css';
 import '@progress/kendo-theme-bootstrap/dist/all.css';
 import { Grid, GridColumn } from '@progress/kendo-react-grid';
-import { filterBy } from '@progress/kendo-data-query';
+import { filterBy, orderBy } from '@progress/kendo-data-query';
 import { ImageCell } from './ryan-kendo-components/ImageCell';
 import dropdownFilterCell from './telerik-kendo-components/dropdownFilterCell';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const albums = [1,2,3];
+const albums = Array.apply(null, { length: 101 }).map(Number.call, Number);
 
 class App extends Component {
     AlbumFilterCell;
@@ -20,20 +20,36 @@ class App extends Component {
             error: null,
             isLoaded: false,
             data: [],
+            sort: [],
+            allowUnsort: true,
+            multiple: true,
             filter: undefined
         };
+        this.sortChange = this.sortChange.bind(this);
         this.filterChange = this.filterChange.bind(this);
+        albums.shift();
         this.AlbumFilterCell = dropdownFilterCell(albums, 'All');
     }
 
-    filterChange(event) {
+    sortChange(event) {
         this.setState({
-            data: this.getData(event.filter),
-            filter: event.filter
+            data: this.getSortedData(event.sort),
+            sort: event.sort
         });
     }
 
-    getData(filter) {
+    getSortedData(sort) {
+        return orderBy(this.state.data, sort);
+    }
+    
+    filterChange(event) {
+        this.setState({
+            data: this.getFilteredData(event.filter),
+            filter: event.filter
+        });
+    }
+    
+    getFilteredData(filter) {
         const data = this.state.data.slice();
         return filterBy(data, filter);
     }
@@ -41,20 +57,19 @@ class App extends Component {
     componentDidMount() {
         fetch("https://jsonplaceholder.typicode.com/photos")
         .then(res => res.json())
-        .then(
-            (result) => {
+        .then((result) => {
+            this.setState({
+                isLoaded: true,
+                data: result
+            });
+        },
+        (error) => {
                 this.setState({
                     isLoaded: true,
-                    data: result
+                    error
                 });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
+            }
+        )
     }
     
     render() {
@@ -70,7 +85,7 @@ class App extends Component {
                         <img src={logo} className="App-logo" alt="logo" width="100px;" height="100px;"/>
                         <h1 className="App-title">{this.state.title}</h1>
                     </header>
-                    <div className="container-fluid" style={{backgroundColor:'red'}}>
+                    <div className="container-fluid App-content">
                         <div className="row">
                             <div className="col"></div>
                             <div className="col">
@@ -78,6 +93,9 @@ class App extends Component {
                                     filterable={true}
                                     filter={this.state.filter}
                                     onFilterChange={this.filterChange}
+                                    sortable={{allowUnsort:true, mode: 'multiple'}}
+                                    sort={this.state.sort}
+                                    onSortChange={this.sortChange}
                                     style={{height:'400px'}}>
                                     <GridColumn field="albumId" title="Album" filterCell={this.AlbumFilterCell} width="75px"/>
                                     <GridColumn field="title" title="Title" filterable={false} width="400px"/>
