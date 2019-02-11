@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/ryan-fleming-react-demo/precache-manifest.9fd19bb33b6e5bdc3a0762272e680406.js"
+  "/ryan-fleming-react-demo/precache-manifest.3aa9d1ce640804ac244c211460d1c9f3.js"
 );
 
 workbox.clientsClaim();
